@@ -5,7 +5,8 @@
     <el-input v-model="queryInput" placeholder="Please input" />
     <el-button type="primary">Primary</el-button>
   </div>
-  <el-table :data="tableData" style="width: 100%">
+  <el-table ref="multipleTableRef" :data="tableData" style="width: 100%" border @selection-change="handleSelectionChange">
+    <el-table-column type="selection" width="55" />
     <el-table-column fixed prop="date" label="Date" width="150" />
     <el-table-column prop="name" label="Name" width="120" />
     <el-table-column prop="state" label="State" width="120" />
@@ -28,8 +29,15 @@ import { ref } from "vue";
 
 let queryInput = ref('')
 
+const multipleSelection=ref([])
+
 const handleClick = () => {
   console.log('click')
+}
+
+const handleSelectionChange = (val) => {
+  multipleSelection.value = val
+  console.log(val);
 }
 
 const tableData = [
@@ -81,9 +89,14 @@ const tableData = [
 .query-box{
   display: flex;
   justify-content: space-between;
-  width: 300px;
+  margin-bottom: 20px;
 }
 .title{
   text-align: center;
+  margin-bottom: 20px;
+}
+.el-input{
+    width: 300px;
+
 }
 </style>
