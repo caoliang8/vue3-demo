@@ -14,13 +14,13 @@
     <el-table-column prop="name" label="姓名" width="120" />
     <el-table-column prop="email" label="邮箱" width="120" />
     <el-table-column prop="phone" label="手机" width="120" />
-    <el-table-column prop="state" label="状态" width="120" />
+    <el-table-column prop="status" label="状态" width="120" />
     <el-table-column prop="address" label="地址" width="300" />
     <el-table-column fixed="right" label="操作" width="120">
       <template #default="scope">
         <el-button link type="primary" size="small" @click="handleRowDel(scope.row)" style="color: #f56c6c;"
           >删除</el-button>
-        <el-button link type="primary" size="small">编辑</el-button>
+        <el-button link type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -35,7 +35,7 @@
         <el-input v-model="tableForm.email" autocomplete="off" />
       </el-form-item>
       <el-form-item label="电话" :label-width="60">
-        <el-input v-model="tableForm.phoone" autocomplete="off" />
+        <el-input v-model="tableForm.phone" autocomplete="off" />
       </el-form-item>
       <el-form-item label="状态" :label-width="60">
         <el-input v-model="tableForm.status" autocomplete="off" />
@@ -64,36 +64,34 @@ const tableData = $ref([
     id:"1",
     name: 'Tom',
     email: '123@qq.com',
-    phoone:'13f8',
-    state: 'California',
+    phone:'13f8',
+    status: 'California',
     address: 'No. 189, Grove St, Los Angeles',
   },
   {
     id:"2",
     name: 'Tom2',
     email: '123@qq.com',
-    phoone:'13f8',
-    state: 'California',
+    phone:'1338',
+    status: 'California',
     address: 'No. 189, Grove St, Los Angeles',
   },
   {
     id:"3",
     name: 'Tom3',
     email: '123@qq.com',
-    phoone:'13f8',
-    state: 'California',
+    phone:'13f8',
+    status: 'California',
     address: 'No. 189, Grove St, Los Angeles',
   },
   {
     id:"4",
     name: 'Tom4',
     email: '123@qq.com',
-    phoone:'13f8',
-    state: 'California',
+    phone:'13f8',
+    status: 'California',
     address: 'No. 189, Grove St, Los Angeles',
   },
-
-
 ])
 
 let multipleSelection = $ref([])
@@ -101,13 +99,17 @@ let dialogFormVisible = $ref(false)
 let tableForm = $ref({
   name: '张三',
   email: '33',
-  phoone: '22',
-  state: '在职',
+  phone: '22',
+  status: '在职',
   address:'aafa'
 })
 let dialogType=$ref('add')
 // 方法
-
+const handleEdit = (row) => {
+  dialogFormVisible = true
+  dialogType = 'edit'
+  tableForm={...row}
+}
 const handleRowDel = ({id}) => {
   console.log(id)
   let index = tableData.findIndex(item => item.id === id)
@@ -128,16 +130,24 @@ let handleSelectionChange = (val) => {
 const handleAdd = () => {
   // dialogFormVisible.value=true
   dialogFormVisible = true    //开启$,去掉.value
-  tableForm={}
+  tableForm = {}
+  //dialogType="add"
 }
 const dialogConfirm = () => {
   dialogFormVisible = false
+  //判断是编辑还是新增
+  if (dialogType === 'add') {
+      tableData.push({
+        id:(tableData.length +1).toString(),
+        ...tableForm,
+      })
+  } else {
+    //获取到当前的这条索隐
+    let index = tableData.findIndex(item => item.id === tableForm.id)
+    tableData[index]=tableForm
+  }
 
-  tableData.push({
-    id:(tableData.length +1).toString(),
-    ...tableForm,
-  })
-  console.log(tableData)
+
 }
 const handleDellList = () => {
   multipleSelection.forEach(id => {
