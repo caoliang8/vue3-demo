@@ -2,7 +2,7 @@
   <div class="tale-box">
     <div class="title">CRUD Demo</div>
   <div class="query-box">
-    <el-input class="query-input" v-model="queryInput" placeholder="Please input" />
+    <el-input class="query-input" v-model="queryInput" placeholder="请输入姓名搜索🔍" @input="handleQueryName"/>
     <div class="btn-list">
           <el-button type="primary" @click="handleAdd">增加</el-button>
     <el-button type="danger" @click="handleDellList" v-if="multipleSelection.length>0">多选删除</el-button>
@@ -59,7 +59,7 @@
 import { ref } from "vue";
 
 let queryInput = $ref('')  //viteconfig.js设置开启$
-const tableData = $ref([
+let tableData = $ref([
   {
     id:"1",
     name: 'Tom',
@@ -94,6 +94,8 @@ const tableData = $ref([
   },
 ])
 
+let tableDataCopy=Object.assign(tableData)
+
 let multipleSelection = $ref([])
 let dialogFormVisible = $ref(false)
 let tableForm = $ref({
@@ -105,6 +107,16 @@ let tableForm = $ref({
 })
 let dialogType=$ref('add')
 // 方法
+const handleQueryName = (val) => {
+  //console.log(val)
+  //console.log(queryInput)
+
+  if (val.length > 0) {
+    tableData = tableData.filter(item=>(item.name).toLowerCase().match(val.toLowerCase()))
+  } else {
+    tableData=tableDataCopy
+  }
+}
 const handleEdit = (row) => {
   dialogFormVisible = true
   dialogType = 'edit'
